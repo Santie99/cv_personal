@@ -1,0 +1,91 @@
+export type ProjectStatus = "Idea" | "Prototipo" | "MVP" | "En producción" | "En validación" | "Pausado";
+
+export type ProjectHighlightLevel = "principal" | "secundario" | "experimento";
+
+export type Project = {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  problem: string;
+  solution: string;
+  targetUser: string;
+  category: string;
+  status: ProjectStatus;
+  tags: string[];
+  stack: string[];
+  features: string[];
+  productDecisions: string[];
+  technicalChallenges: string[];
+  learnings: string[];
+  potential: string[];
+  demoUrl?: string;
+  githubUrl?: string;
+  videoUrl?: string;
+  coverImageUrl: string;
+  ogImageUrl?: string;
+  seoTitle: string;
+  seoDescription: string;
+  isPublished: boolean;
+  isFeatured: boolean;
+  featuredOrder: number;
+  highlightLevel: ProjectHighlightLevel;
+};
+
+export type Service = {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  idealClient: string;
+  problem: string;
+  deliverables: string[];
+  scope: string[];
+  exclusions: string[];
+  priceFrom: string;
+  priceNote: string;
+  ctaText: string;
+  isActive: boolean;
+  sortOrder: number;
+};
+
+export type Profile = {
+  name: string;
+  headline: string;
+  shortBio: string;
+  longBio: string;
+  profileImageUrl: string;
+  location: string;
+  email: string;
+  githubUrl: string;
+  linkedinUrl: string;
+  xUrl: string;
+  whatsappUrl: string;
+  skills: Array<{ name: string; category: string; level: "Base" | "Base aplicada" | "Intermedio" | "Aplicado en proyectos" }>;
+  education: Array<{ title: string; provider: string; description: string; category: string }>;
+};
+
+export type ContactMessageInput = {
+  name: string;
+  email: string;
+  company?: string;
+  opportunityType: string;
+  budget?: string;
+  link?: string;
+  message: string;
+};
+
+
+export type ContactMessageStatus = "Nuevo" | "Leído" | "Respondido" | "En conversación" | "Cerrado";
+
+export type ContactMessage = ContactMessageInput & {
+  id: string;
+  status: ContactMessageStatus;
+  createdAt: string;
+};
+
+export type NavItem = {
+  href: string;
+  label: string;
+};
