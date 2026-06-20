@@ -9,7 +9,27 @@ const projectSteps = [
   "Activar Publicado para que aparezca en /proyectos.",
   "Activar Destacado en home solo si debe competir por los 3 espacios principales.",
   "Asignar Orden destacado: 1 aparece primero, 2 segundo, 3 tercero.",
+  "Subir portada o galería desde el formulario del proyecto si aplica.",
   "Guardar, revisar /proyectos, revisar la página individual y luego revisar la home."
+];
+
+
+const mediaSteps = [
+  "Ejecutar supabase/sprint-06-storage.sql en Supabase SQL Editor.",
+  "Entrar a /admin/media y subir una imagen de prueba.",
+  "Copiar la URL o usar los campos de subida en /admin/perfil y /admin/proyectos.",
+  "Para la foto principal, subir imagen desde /admin/perfil y guardar perfil.",
+  "Para proyectos, subir portada, OG image o galería desde el formulario del proyecto.",
+  "Revisar en la web pública que la imagen cargue correctamente."
+];
+
+const whatsappSteps = [
+  "Entrar a /admin/perfil.",
+  "Completar el campo WhatsApp con formato internacional, por ejemplo 573118773089.",
+  "Guardar perfil.",
+  "Probar el botón Hablemos de una idea en la home.",
+  "Probar botones de servicios: cada uno debe abrir WhatsApp con Hola, quiero [CTA].",
+  "Si WhatsApp está vacío, los botones deben enviar a /contacto."
 ];
 
 const deploySteps = [
@@ -21,7 +41,8 @@ const deploySteps = [
   "Actualizar NEXT_PUBLIC_SITE_URL con la URL final de producción.",
   "Configurar Site URL y Redirect URLs en Supabase Auth.",
   "Crear o verificar el usuario admin en Supabase Auth.",
-  "Entrar a /admin/login en producción y validar CRUD de proyectos."
+  "Ejecutar supabase/sprint-06-storage.sql para crear el bucket portfolio-media.",
+  "Entrar a /admin/login en producción y validar CRUD de proyectos, media y WhatsApp."
 ];
 
 export default function AdminGuidePage() {
@@ -35,14 +56,17 @@ export default function AdminGuidePage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <GuideCard title="Actualizar proyectos desde /admin" items={projectSteps} />
         <GuideCard title="Checklist de deploy" items={deploySteps} />
+        <GuideCard title="Gestión de imágenes" items={mediaSteps} />
+        <GuideCard title="Embudo a WhatsApp" items={whatsappSteps} />
       </div>
 
       <section className="glass-card mt-6 rounded-3xl p-6">
         <h2 className="text-xl font-black text-white">Reglas rápidas</h2>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="mt-4 grid gap-4 md:grid-cols-4">
           <Rule title="Publicado" text="Si está activo, el proyecto aparece en /proyectos. Si está inactivo, queda como borrador." />
           <Rule title="Destacado" text="Solo controla si puede aparecer en la home. No basta con destacarlo: también debe estar publicado." />
           <Rule title="Orden destacado" text="La home muestra máximo 3 destacados. Usa 1, 2 y 3 para controlar el orden principal." />
+          <Rule title="WhatsApp" text="Los CTAs usan el WhatsApp del perfil. Si está vacío, redirigen a /contacto para no romper el flujo." />
         </div>
       </section>
 

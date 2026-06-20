@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import type { Profile } from "@/types";
 
 export function ProfileForm({ profile }: { profile: Profile }) {
@@ -56,7 +57,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         <Field label="Headline" value={form.headline} onChange={(value) => setField("headline", value)} />
         <Textarea label="Bio corta" value={form.shortBio} onChange={(value) => setField("shortBio", value)} />
         <Textarea label="Bio larga" value={form.longBio} onChange={(value) => setField("longBio", value)} />
-        <Field label="Foto principal" value={form.profileImageUrl} onChange={(value) => setField("profileImageUrl", value)} helper="Ejemplo: /profile/santie-profile.jpeg" />
+        <ImageUploadField label="Foto principal" value={form.profileImageUrl} onChange={(value) => setField("profileImageUrl", value)} folder="profile" helper="Sube tu foto al bucket portfolio-media o pega una URL existente." />
         <Field label="Ubicación" value={form.location} onChange={(value) => setField("location", value)} />
         <Field label="Email público" value={form.email} onChange={(value) => setField("email", value)} />
         <Field label="GitHub" value={form.githubUrl} onChange={(value) => setField("githubUrl", value)} />

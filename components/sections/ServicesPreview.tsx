@@ -1,9 +1,9 @@
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import type { Service } from "@/types";
+import type { Profile, Service } from "@/types";
 
-export function ServicesPreview({ services }: { services: Service[] }) {
+export function ServicesPreview({ services, profile }: { services: Service[]; profile: Pick<Profile, "whatsappUrl"> }) {
   return (
     <section className="border-y border-white/10 bg-white/[0.03]">
       <div className="container-page py-20">
@@ -17,7 +17,7 @@ export function ServicesPreview({ services }: { services: Service[] }) {
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {services.slice(0, 4).map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard key={service.id} service={service} profile={profile} />
           ))}
         </div>
       </div>

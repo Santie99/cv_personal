@@ -25,10 +25,10 @@ export default async function HomePage() {
     <>
       <Hero profile={profile} capabilities={capabilities} />
       <FeaturedProjects projects={projects} />
-      <ServicesPreview services={services} />
+      <ServicesPreview services={services} profile={profile} />
       <Process />
       <AboutPreview profile={profile} />
-      <FinalCTA />
+      <FinalCTA profile={profile} />
     </>
   );
 }

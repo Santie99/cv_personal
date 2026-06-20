@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { ProjectImagesManager } from "@/components/admin/ProjectImagesManager";
 import type { Project } from "@/types";
 
 const statuses = ["Idea", "Prototipo", "MVP", "En producción", "En validación", "Pausado"];
@@ -146,8 +148,8 @@ export function ProjectForm({ project }: { project?: Project }) {
       <section className="glass-card rounded-3xl p-5">
         <h2 className="text-lg font-black text-white">Visibilidad, links y SEO</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <Field label="Imagen principal" value={coverImageUrl} onChange={setCoverImageUrl} helper="Ejemplo: /projects/funded-os.svg" />
-          <Field label="OG image" value={ogImageUrl} onChange={setOgImageUrl} />
+          <ImageUploadField label="Imagen principal" value={coverImageUrl} onChange={setCoverImageUrl} folder="projects" helper="Se usa como portada pública del proyecto." />
+          <ImageUploadField label="OG image" value={ogImageUrl} onChange={setOgImageUrl} folder="og" helper="Imagen para compartir en redes. Puede ser igual a la portada." />
           <Field label="Demo URL" value={demoUrl} onChange={setDemoUrl} />
           <Field label="GitHub URL" value={githubUrl} onChange={setGithubUrl} />
           <Field label="Video URL" value={videoUrl} onChange={setVideoUrl} />
@@ -162,6 +164,12 @@ export function ProjectForm({ project }: { project?: Project }) {
           <Checkbox label="Destacado en home" checked={isFeatured} onChange={setIsFeatured} />
         </div>
       </section>
+
+      {project ? <ProjectImagesManager projectId={project.id} /> : (
+        <section className="glass-card rounded-3xl p-5 text-sm leading-7 text-slate-300">
+          Guarda primero el proyecto para poder agregar imágenes adicionales a su galería.
+        </section>
+      )}
 
       <div className="flex gap-3">
         <button type="submit" disabled={saving} className="rounded-2xl bg-cyan-300 px-6 py-3 font-black text-slate-950 hover:bg-cyan-200 disabled:opacity-60">

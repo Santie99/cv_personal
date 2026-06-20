@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { getContactHref, HERO_WHATSAPP_MESSAGE } from "@/lib/whatsapp";
 import type { Profile } from "@/types";
 
 type HeroProps = {
@@ -23,7 +24,7 @@ export function Hero({ profile, capabilities }: HeroProps) {
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <ButtonLink href="/proyectos">Ver proyectos</ButtonLink>
-            <ButtonLink href="/contacto" variant="secondary">Hablemos de una idea</ButtonLink>
+            <ButtonLink href={getContactHref(profile, HERO_WHATSAPP_MESSAGE)} variant="secondary">Hablemos de una idea</ButtonLink>
           </div>
           <div className="mt-10 grid gap-3 sm:grid-cols-2">
             {capabilities.slice(0, 4).map((capability) => (

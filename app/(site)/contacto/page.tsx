@@ -2,6 +2,7 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getProfile } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
+import { CONTACT_WHATSAPP_MESSAGE, getContactHref, hasWhatsApp } from "@/lib/whatsapp";
 
 export const metadata = buildMetadata({
   title: "Contacto",
@@ -25,7 +26,19 @@ export default async function ContactPage() {
           />
           <div className="glass-card mt-8 rounded-[2rem] p-6">
             <p className="font-black text-white">Contacto directo</p>
-            <a href={`mailto:${profile.email}`} className="mt-3 block text-cyan-300 hover:text-cyan-100">{profile.email}</a>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <a href={`mailto:${profile.email}`} className="text-cyan-300 hover:text-cyan-100">{profile.email}</a>
+              {hasWhatsApp(profile) ? (
+                <a
+                  href={getContactHref(profile, CONTACT_WHATSAPP_MESSAGE)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-cyan-300/40 bg-cyan-300/10 px-4 py-2 text-xs font-black text-cyan-100 hover:bg-cyan-300 hover:text-slate-950"
+                >
+                  WhatsApp
+                </a>
+              ) : null}
+            </div>
             <p className="mt-5 text-sm leading-7 text-slate-300">
               Tipos de oportunidad: empleo, freelance, MVP web, dashboard, SaaS, automatización con IA o alianza.
             </p>

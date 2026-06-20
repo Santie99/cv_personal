@@ -1,6 +1,8 @@
 import { ButtonLink } from "@/components/ui/ButtonLink";
+import { getContactHref, HERO_WHATSAPP_MESSAGE } from "@/lib/whatsapp";
+import type { Profile } from "@/types";
 
-export function FinalCTA() {
+export function FinalCTA({ profile }: { profile: Profile }) {
   return (
     <section className="container-page py-20">
       <div className="glass-card grid gap-8 overflow-hidden rounded-[2.5rem] p-8 md:p-12 lg:grid-cols-[1.4fr_0.6fr] lg:items-center">
@@ -14,7 +16,7 @@ export function FinalCTA() {
           </p>
         </div>
         <div className="flex lg:justify-end">
-          <ButtonLink href="/contacto">Contáctame</ButtonLink>
+          <ButtonLink href={getContactHref(profile, HERO_WHATSAPP_MESSAGE)}>Hablemos por WhatsApp</ButtonLink>
         </div>
       </div>
     </section>

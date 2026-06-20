@@ -1,7 +1,11 @@
 import Link from "next/link";
-import type { Service } from "@/types";
+import { getContactHref, serviceWhatsAppMessage } from "@/lib/whatsapp";
+import type { Profile, Service } from "@/types";
 
-export function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({ service, profile }: { service: Service; profile: Pick<Profile, "whatsappUrl"> }) {
+  const href = getContactHref(profile, serviceWhatsAppMessage(service.ctaText));
+  const isExternal = href.startsWith("http");
+
   return (
     <article className="glass-card flex h-full flex-col rounded-[2rem] p-6">
       <div>
@@ -28,7 +32,9 @@ export function ServiceCard({ service }: { service: Service }) {
       <div className="mt-auto pt-6">
         <p className="text-lg font-black text-cyan-100">{service.priceFrom}</p>
         <Link
-          href="/contacto"
+          href={href}
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noreferrer" : undefined}
           className="focus-ring mt-4 inline-flex w-full items-center justify-center rounded-full border border-cyan-200 bg-cyan-300 px-5 py-3 text-center text-sm font-black text-slate-950 shadow-[0_14px_36px_rgba(103,232,249,0.16)] transition hover:bg-cyan-200"
         >
           {service.ctaText}

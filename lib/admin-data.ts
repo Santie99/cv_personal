@@ -1,6 +1,6 @@
-import { mapProject, mapService, type DbProject, type DbService } from "@/lib/admin-mappers";
+import { mapProject, mapProjectImage, mapService, type DbProject, type DbProjectImage, type DbService } from "@/lib/admin-mappers";
 import { adminSupabaseRest } from "@/lib/admin-supabase";
-import type { ContactMessage, Profile, Project, Service } from "@/types";
+import type { ContactMessage, Profile, Project, ProjectImage, Service } from "@/types";
 
 type DbProfile = {
   id: string;
@@ -57,6 +57,13 @@ export async function getAdminProject(id: string): Promise<Project | null> {
     query: `select=*&id=eq.${encodeURIComponent(id)}&limit=1`
   });
   return data[0] ? mapProject(data[0]) : null;
+}
+
+export async function getAdminProjectImages(projectId: string): Promise<ProjectImage[]> {
+  const data = await adminSupabaseRest<DbProjectImage[]>("project_images", {
+    query: `select=*&project_id=eq.${encodeURIComponent(projectId)}&order=sort_order.asc&order=created_at.asc`
+  });
+  return data.map(mapProjectImage);
 }
 
 export async function getAdminServices(): Promise<Service[]> {

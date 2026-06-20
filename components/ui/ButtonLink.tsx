@@ -2,6 +2,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+function isExternalHref(href: string) {
+  return href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:") || href.startsWith("tel:");
+}
+
 type ButtonLinkProps = {
   href: string;
   children: ReactNode;
@@ -18,9 +22,13 @@ export function ButtonLink({ href, children, variant = "primary", className }: B
     ghost: "text-slate-300 hover:text-white hover:bg-white/8 border border-transparent"
   };
 
+  const external = isExternalHref(href);
+
   return (
     <Link
       href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
       className={cn(
         "focus-ring inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition",
         styles[variant],

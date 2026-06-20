@@ -12,6 +12,7 @@ export async function GET() {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
   const adminEmails = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || "";
+  const storageBucket = process.env.SUPABASE_STORAGE_BUCKET || "portfolio-media";
 
   let supabasePublicRead: HealthStatus = "warning";
   let supabaseMessage = "Supabase no está configurado.";
@@ -36,6 +37,7 @@ export async function GET() {
     supabaseAnonKeyConfigured: Boolean(supabaseAnonKey),
     serviceRoleKeyConfigured: Boolean(serviceRoleKey),
     adminEmailsConfigured: Boolean(adminEmails),
+    storageBucketConfigured: Boolean(storageBucket),
     supabasePublicRead
   };
 
@@ -55,6 +57,7 @@ export async function GET() {
     checks,
     notes: {
       supabasePublicRead: supabaseMessage,
+      storage: `Bucket esperado: ${storageBucket}.`,
       security: "Esta ruta solo expone estados booleanos; no expone llaves ni secretos."
     }
   });

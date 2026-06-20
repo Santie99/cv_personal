@@ -4,8 +4,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { getProjectBySlug, getPublishedProjects } from "@/lib/data";
+import { getProfile, getProjectBySlug, getProjectImages, getPublishedProjects } from "@/lib/data";
 import { breadcrumbSchema, buildMetadata, projectSchema } from "@/lib/seo";
+import { getContactHref, PROJECT_WHATSAPP_MESSAGE_PREFIX } from "@/lib/whatsapp";
 
 type ProjectDetailPageProps = {
   params: Promise<{ slug: string }>;
@@ -40,6 +41,12 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   const project = await getProjectBySlug(slug);
 
   if (!project) notFound();
+
+  const [profile, projectImages] = await Promise.all([
+    getProfile(),
+    getProjectImages(project.id)
+  ]);
+  const projectContactHref = getContactHref(profile, `${PROJECT_WHATSAPP_MESSAGE_PREFIX} ${project.title} y quiero hablar de algo parecido`);
 
   const sections = [
     { title: "Problema", content: project.problem },
@@ -84,7 +91,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             <h1 className="mt-6 text-4xl font-black leading-tight tracking-[-0.03em] text-white md:text-6xl">{project.title}</h1>
             <p className="mt-6 text-lg leading-8 text-slate-300">{project.longDescription}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/contacto">Hablar sobre este enfoque</ButtonLink>
+              <ButtonLink href={projectContactHref}>Hablar sobre este enfoque</ButtonLink>
               {project.demoUrl ? <ButtonLink href={project.demoUrl} variant="secondary">Ver demo</ButtonLink> : null}
             </div>
           </div>
@@ -142,6 +149,37 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           ))}
         </div>
       </section>
+      {projectImages.length > 0 ? (
+        <section className="container-page py-10">
+          <div className="mb-6">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Galería</p>
+            <h2 className="mt-3 text-3xl font-black text-white">Capturas y material visual</h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {projectImages.map((image) => (
+              <div key={image.id} className="glass-card overflow-hidden rounded-[2rem] p-3">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-[1.5rem] bg-slate-900">
+                  <Image src={image.imageUrl} alt={image.altText} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" unoptimized={image.imageUrl.endsWith(".svg")} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="container-page pb-20 pt-8">
+        <div className="glass-card grid gap-6 rounded-[2rem] p-8 md:grid-cols-[1.3fr_0.7fr] md:items-center">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Siguiente paso</p>
+            <h2 className="mt-3 text-3xl font-black text-white">¿Quieres construir algo parecido?</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-300">Puedo ayudarte a convertir una idea, proceso o necesidad de nicho en una primera versión funcional.</p>
+          </div>
+          <div className="md:text-right">
+            <ButtonLink href={projectContactHref}>Hablemos por WhatsApp</ButtonLink>
+          </div>
+        </div>
+      </section>
+
     </article>
   );
 }

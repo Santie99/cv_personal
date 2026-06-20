@@ -1,6 +1,6 @@
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { getActiveServices } from "@/lib/data";
+import { getActiveServices, getProfile } from "@/lib/data";
 import { buildMetadata, servicesSchema } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -12,7 +12,7 @@ export const metadata = buildMetadata({
 });
 
 export default async function ServicesPage() {
-  const activeServices = await getActiveServices();
+  const [activeServices, profile] = await Promise.all([getActiveServices(), getProfile()]);
 
   return (
     <section className="container-page py-16 md:py-24">
@@ -26,7 +26,7 @@ export default async function ServicesPage() {
 
       <div className="mt-12 grid gap-6 md:grid-cols-2">
         {activeServices.map((service) => (
-          <ServiceCard key={service.id} service={service} />
+          <ServiceCard key={service.id} service={service} profile={profile} />
         ))}
       </div>
 

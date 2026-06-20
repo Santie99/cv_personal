@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const ADMIN_ACCESS_COOKIE = "santie_admin_access_token";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin/login")) {

@@ -2,6 +2,15 @@ export type ProjectStatus = "Idea" | "Prototipo" | "MVP" | "En producción" | "E
 
 export type ProjectHighlightLevel = "principal" | "secundario" | "experimento";
 
+export type ProjectImage = {
+  id: string;
+  projectId: string;
+  imageUrl: string;
+  altText: string;
+  sortOrder: number;
+  createdAt?: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -31,6 +40,7 @@ export type Project = {
   isFeatured: boolean;
   featuredOrder: number;
   highlightLevel: ProjectHighlightLevel;
+  images?: ProjectImage[];
 };
 
 export type Service = {

@@ -1,6 +1,6 @@
 import { capabilities as fallbackCapabilities, profile as fallbackProfile, projects as fallbackProjects, services as fallbackServices } from "@/lib/mock-data";
 import { isSupabaseConfigured, supabaseRest } from "@/lib/supabase-rest";
-import type { Profile, Project, Service } from "@/types";
+import type { Profile, Project, ProjectImage, Service } from "@/types";
 
 type DbProfile = {
   id: string;
@@ -65,6 +65,15 @@ type DbProject = {
   is_featured: boolean;
   featured_order: number;
   highlight_level: Project["highlightLevel"];
+};
+
+type DbProjectImage = {
+  id: string;
+  project_id: string;
+  image_url: string;
+  alt_text: string;
+  sort_order: number;
+  created_at?: string;
 };
 
 type DbService = {
@@ -140,6 +149,15 @@ const mapProject = (project: DbProject): Project => ({
   isFeatured: project.is_featured,
   featuredOrder: project.featured_order,
   highlightLevel: project.highlight_level
+});
+
+const mapProjectImage = (image: DbProjectImage): ProjectImage => ({
+  id: image.id,
+  projectId: image.project_id,
+  imageUrl: image.image_url,
+  altText: image.alt_text,
+  sortOrder: image.sort_order,
+  createdAt: image.created_at
 });
 
 const mapService = (service: DbService): Service => ({
@@ -221,6 +239,16 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 
     return data[0] ? mapProject(data[0]) : null;
   }, fallbackProjects.find((project) => project.slug === slug && project.isPublished) || null);
+}
+
+export async function getProjectImages(projectId: string): Promise<ProjectImage[]> {
+  return withFallback(async () => {
+    const data = await supabaseRest<DbProjectImage[]>("project_images", {
+      query: `project_id=eq.${encodeURIComponent(projectId)}&order=sort_order.asc&order=created_at.asc`
+    });
+
+    return data.map(mapProjectImage);
+  }, []);
 }
 
 export async function getActiveServices(): Promise<Service[]> {

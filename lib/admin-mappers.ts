@@ -1,4 +1,4 @@
-import type { Project, ProjectHighlightLevel, ProjectStatus, Service } from "@/types";
+import type { Project, ProjectHighlightLevel, ProjectImage, ProjectStatus, Service } from "@/types";
 
 export type DbProject = {
   id: string;
@@ -29,6 +29,15 @@ export type DbProject = {
   is_featured: boolean;
   featured_order: number;
   highlight_level: ProjectHighlightLevel;
+};
+
+export type DbProjectImage = {
+  id: string;
+  project_id: string;
+  image_url: string;
+  alt_text: string;
+  sort_order: number;
+  created_at?: string;
 };
 
 export type DbService = {
@@ -78,6 +87,17 @@ export function mapProject(project: DbProject): Project {
     isFeatured: project.is_featured,
     featuredOrder: project.featured_order,
     highlightLevel: project.highlight_level
+  };
+}
+
+export function mapProjectImage(image: DbProjectImage): ProjectImage {
+  return {
+    id: image.id,
+    projectId: image.project_id,
+    imageUrl: image.image_url,
+    altText: image.alt_text,
+    sortOrder: image.sort_order,
+    createdAt: image.created_at
   };
 }
 
