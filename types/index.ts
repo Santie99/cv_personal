@@ -56,6 +56,7 @@ export type Service = {
   priceFrom: string;
   priceNote: string;
   ctaText: string;
+  whatsappMessage?: string;
   isActive: boolean;
   sortOrder: number;
 };
@@ -76,6 +77,45 @@ export type Profile = {
   education: Array<{ title: string; provider: string; description: string; category: string }>;
 };
 
+export type HomeSection = {
+  key: string;
+  title: string;
+  subtitle?: string;
+  content?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
+  isActive: boolean;
+  sortOrder: number;
+};
+
+export type HomeVisibility = {
+  hero: boolean;
+  featuredProjects: boolean;
+  services: boolean;
+  process: boolean;
+  about: boolean;
+  finalCta: boolean;
+};
+
+export type HomeContent = {
+  hero: HomeSection;
+  aboutPreview: HomeSection;
+  finalCta: HomeSection;
+  capabilities: string[];
+  visibility: HomeVisibility;
+};
+
+export type SiteSettings = {
+  siteTitle: string;
+  siteDescription: string;
+  keywords: string[];
+  ogImageUrl: string;
+  canonicalUrl: string;
+  notesEnabled: boolean;
+  freelanceAvailable: boolean;
+  whatsappFallbackToContact: boolean;
+};
+
 export type ContactMessageInput = {
   name: string;
   email: string;
@@ -85,7 +125,6 @@ export type ContactMessageInput = {
   link?: string;
   message: string;
 };
-
 
 export type ContactMessageStatus = "Nuevo" | "Leído" | "Respondido" | "En conversación" | "Cerrado";
 

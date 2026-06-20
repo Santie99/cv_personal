@@ -1,6 +1,7 @@
 import { mapProject, mapProjectImage, mapService, type DbProject, type DbProjectImage, type DbService } from "@/lib/admin-mappers";
 import { adminSupabaseRest } from "@/lib/admin-supabase";
-import type { ContactMessage, Profile, Project, ProjectImage, Service } from "@/types";
+import { defaultSiteSettings } from "@/lib/data";
+import type { ContactMessage, HomeContent, HomeSection, HomeVisibility, Profile, Project, ProjectImage, Service, SiteSettings } from "@/types";
 
 type DbProfile = {
   id: string;
@@ -44,6 +45,84 @@ type DbContactMessage = {
   status: ContactMessage["status"];
   created_at: string;
 };
+
+
+
+type DbHomeSection = {
+  key: string;
+  title: string;
+  subtitle: string | null;
+  content: string | null;
+  cta_label: string | null;
+  cta_url: string | null;
+  is_active: boolean;
+  sort_order: number;
+};
+
+type DbSiteSetting = {
+  key: string;
+  value: unknown;
+};
+
+const defaultHomeVisibility: HomeVisibility = {
+  hero: true,
+  featuredProjects: true,
+  services: true,
+  process: true,
+  about: true,
+  finalCta: true
+};
+
+const defaultHomeSections: Record<string, HomeSection> = {
+  hero: { key: "hero", title: "Construyo herramientas web e IA para convertir procesos complejos en sistemas accionables.", subtitle: "Product builder · Web tools · AI applied systems", content: "Diseño y desarrollo productos digitales, dashboards, PWAs y automatizaciones para nichos específicos como trading, finanzas, comunidades y productividad.", ctaLabel: "Ver proyectos", ctaUrl: "/proyectos", isActive: true, sortOrder: 1 },
+  about_preview: { key: "about_preview", title: "Construyo mientras aprendo, documento y convierto ideas en producto.", subtitle: "Sobre mí", content: "Me interesa convertir información dispersa, procesos manuales y decisiones complejas en herramientas claras, medibles y fáciles de usar.", ctaLabel: "Leer más", ctaUrl: "/sobre-mi", isActive: true, sortOrder: 5 },
+  final_cta: { key: "final_cta", title: "¿Tienes una idea, proceso o problema que quieres convertir en una herramienta digital?", subtitle: "Contacto", content: "Puedo ayudarte a estructurarlo, diseñar el flujo y construir una primera versión funcional con enfoque de producto.", ctaLabel: "Hablemos por WhatsApp", ctaUrl: "whatsapp", isActive: true, sortOrder: 99 }
+};
+
+function mapHomeSection(section: DbHomeSection): HomeSection {
+  return {
+    key: section.key,
+    title: section.title,
+    subtitle: section.subtitle || undefined,
+    content: section.content || undefined,
+    ctaLabel: section.cta_label || undefined,
+    ctaUrl: section.cta_url || undefined,
+    isActive: section.is_active,
+    sortOrder: section.sort_order
+  };
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function normalizeVisibility(value: unknown): HomeVisibility {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return defaultHomeVisibility;
+  const record = value as Record<string, unknown>;
+  return {
+    hero: record.hero !== false,
+    featuredProjects: record.featuredProjects !== false,
+    services: record.services !== false,
+    process: record.process !== false,
+    about: record.about !== false,
+    finalCta: record.finalCta !== false
+  };
+}
+
+function normalizeSiteSettings(value: unknown): SiteSettings {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return defaultSiteSettings;
+  const record = value as Record<string, unknown>;
+  return {
+    siteTitle: typeof record.siteTitle === "string" && record.siteTitle.trim() ? record.siteTitle : defaultSiteSettings.siteTitle,
+    siteDescription: typeof record.siteDescription === "string" && record.siteDescription.trim() ? record.siteDescription : defaultSiteSettings.siteDescription,
+    keywords: isStringArray(record.keywords) ? record.keywords : defaultSiteSettings.keywords,
+    ogImageUrl: typeof record.ogImageUrl === "string" && record.ogImageUrl.trim() ? record.ogImageUrl : defaultSiteSettings.ogImageUrl,
+    canonicalUrl: typeof record.canonicalUrl === "string" && record.canonicalUrl.trim() ? record.canonicalUrl : defaultSiteSettings.canonicalUrl,
+    notesEnabled: record.notesEnabled !== false,
+    freelanceAvailable: record.freelanceAvailable !== false,
+    whatsappFallbackToContact: record.whatsappFallbackToContact !== false
+  };
+}
 
 export async function getAdminProjects(): Promise<Project[]> {
   const data = await adminSupabaseRest<DbProject[]>("projects", {
@@ -126,4 +205,29 @@ export async function getAdminMessages(): Promise<ContactMessage[]> {
     status: message.status,
     createdAt: message.created_at
   }));
+}
+
+
+export async function getAdminHomeContent(): Promise<HomeContent> {
+  const [sections, settings] = await Promise.all([
+    adminSupabaseRest<DbHomeSection[]>("home_sections", { query: "select=*&order=sort_order.asc" }),
+    adminSupabaseRest<DbSiteSetting[]>("site_settings", { query: "select=*&key=in.(capabilities,home_visibility)&order=key.asc" })
+  ]);
+
+  const byKey = new Map(sections.map((section) => [section.key, mapHomeSection(section)]));
+  const capabilities = settings.find((setting) => setting.key === "capabilities")?.value;
+  const visibility = settings.find((setting) => setting.key === "home_visibility")?.value;
+
+  return {
+    hero: byKey.get("hero") || defaultHomeSections.hero,
+    aboutPreview: byKey.get("about_preview") || defaultHomeSections.about_preview,
+    finalCta: byKey.get("final_cta") || defaultHomeSections.final_cta,
+    capabilities: isStringArray(capabilities) ? capabilities : [],
+    visibility: normalizeVisibility(visibility)
+  };
+}
+
+export async function getAdminSiteSettings(): Promise<SiteSettings> {
+  const data = await adminSupabaseRest<DbSiteSetting[]>("site_settings", { query: "select=*&key=eq.global_config&limit=1" });
+  return normalizeSiteSettings(data[0]?.value);
 }

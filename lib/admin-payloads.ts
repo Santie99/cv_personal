@@ -102,6 +102,7 @@ export function servicePayload(body: Record<string, unknown>) {
     price_from: cleanString(body.priceFrom || body.price_from),
     price_note: cleanString(body.priceNote || body.price_note),
     cta_text: cleanString(body.ctaText || body.cta_text, "Hablemos"),
+    whatsapp_message: cleanNullableString(body.whatsappMessage || body.whatsapp_message),
     is_active: cleanBoolean(body.isActive || body.is_active),
     sort_order: cleanNumber(body.sortOrder || body.sort_order, 100),
     updated_at: new Date().toISOString()

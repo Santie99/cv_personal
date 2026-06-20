@@ -1,29 +1,34 @@
 import Image from "next/image";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { getContactHref, HERO_WHATSAPP_MESSAGE } from "@/lib/whatsapp";
-import type { Profile } from "@/types";
+import type { HomeSection, Profile } from "@/types";
 
 type HeroProps = {
   profile: Profile;
   capabilities: string[];
+  content: HomeSection;
 };
 
-export function Hero({ profile, capabilities }: HeroProps) {
+function renderTitle(title: string) {
+  const marker = "sistemas accionables";
+  if (!title.toLowerCase().includes(marker)) return title;
+  const [before] = title.split(/sistemas accionables/i);
+  return <>{before}<span className="text-gradient">sistemas accionables.</span></>;
+}
+
+export function Hero({ profile, capabilities, content }: HeroProps) {
+  const primaryHref = content.ctaUrl || "/proyectos";
   return (
     <section className="grid-bg overflow-hidden border-b border-white/10">
       <div className="container-page grid min-h-[calc(100vh-65px)] items-center gap-12 py-16 lg:grid-cols-[1.08fr_0.92fr] lg:py-24">
         <div>
-          <p className="mb-5 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">
-            Product builder · Web tools · AI applied systems
-          </p>
+          {content.subtitle ? <p className="mb-5 inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">{content.subtitle}</p> : null}
           <h1 className="max-w-4xl text-5xl font-black leading-[0.96] tracking-[-0.04em] text-white md:text-7xl">
-            Construyo herramientas web e IA para convertir procesos complejos en <span className="text-gradient">sistemas accionables.</span>
+            {renderTitle(content.title)}
           </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">
-            Diseño y desarrollo productos digitales, dashboards, PWAs y automatizaciones para nichos específicos como trading, finanzas, comunidades y productividad.
-          </p>
+          {content.content ? <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 md:text-xl">{content.content}</p> : null}
           <div className="mt-9 flex flex-wrap gap-3">
-            <ButtonLink href="/proyectos">Ver proyectos</ButtonLink>
+            <ButtonLink href={primaryHref}>{content.ctaLabel || "Ver proyectos"}</ButtonLink>
             <ButtonLink href={getContactHref(profile, HERO_WHATSAPP_MESSAGE)} variant="secondary">Hablemos de una idea</ButtonLink>
           </div>
           <div className="mt-10 grid gap-3 sm:grid-cols-2">

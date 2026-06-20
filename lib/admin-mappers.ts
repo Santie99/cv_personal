@@ -53,6 +53,7 @@ export type DbService = {
   price_from: string;
   price_note: string;
   cta_text: string;
+  whatsapp_message?: string | null;
   is_active: boolean;
   sort_order: number;
 };
@@ -115,6 +116,7 @@ export function mapService(service: DbService): Service {
     priceFrom: service.price_from,
     priceNote: service.price_note,
     ctaText: service.cta_text,
+    whatsappMessage: service.whatsapp_message || undefined,
     isActive: service.is_active,
     sortOrder: service.sort_order
   };

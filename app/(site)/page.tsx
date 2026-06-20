@@ -4,31 +4,36 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Hero } from "@/components/sections/Hero";
 import { Process } from "@/components/sections/Process";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
-import { getActiveServices, getCapabilities, getFeaturedProjects, getProfile } from "@/lib/data";
+import { getActiveServices, getFeaturedProjects, getHomeContent, getProfile, getSiteSettings } from "@/lib/data";
 import { buildMetadata } from "@/lib/seo";
 
-export const metadata = buildMetadata({
-  path: "/",
-  title: "Santie Bernal · Product Builder Web & AI",
-  description: "Construyo herramientas web e IA para convertir procesos complejos en sistemas simples, medibles y accionables."
-});
+export async function generateMetadata() {
+  const settings = await getSiteSettings();
+  return buildMetadata({
+    path: "/",
+    title: settings.siteTitle,
+    description: settings.siteDescription,
+    image: settings.ogImageUrl,
+    keywords: settings.keywords
+  });
+}
 
 export default async function HomePage() {
-  const [profile, capabilities, projects, services] = await Promise.all([
+  const [profile, home, projects, services] = await Promise.all([
     getProfile(),
-    getCapabilities(),
+    getHomeContent(),
     getFeaturedProjects(),
     getActiveServices()
   ]);
 
   return (
     <>
-      <Hero profile={profile} capabilities={capabilities} />
-      <FeaturedProjects projects={projects} />
-      <ServicesPreview services={services} profile={profile} />
-      <Process />
-      <AboutPreview profile={profile} />
-      <FinalCTA profile={profile} />
+      {home.visibility.hero ? <Hero profile={profile} capabilities={home.capabilities} content={home.hero} /> : null}
+      {home.visibility.featuredProjects ? <FeaturedProjects projects={projects} /> : null}
+      {home.visibility.services ? <ServicesPreview services={services} profile={profile} /> : null}
+      {home.visibility.process ? <Process /> : null}
+      {home.visibility.about ? <AboutPreview profile={profile} content={home.aboutPreview} /> : null}
+      {home.visibility.finalCta ? <FinalCTA profile={profile} content={home.finalCta} /> : null}
     </>
   );
 }

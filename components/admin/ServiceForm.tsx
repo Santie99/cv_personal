@@ -25,6 +25,7 @@ export function ServiceForm({ service }: { service?: Service }) {
   const [priceFrom, setPriceFrom] = useState(service?.priceFrom || "");
   const [priceNote, setPriceNote] = useState(service?.priceNote || "");
   const [ctaText, setCtaText] = useState(service?.ctaText || "Hablemos");
+  const [whatsappMessage, setWhatsappMessage] = useState(service?.whatsappMessage || "");
   const [isActive, setIsActive] = useState(service?.isActive ?? true);
   const [sortOrder, setSortOrder] = useState(service?.sortOrder || 100);
 
@@ -39,7 +40,7 @@ export function ServiceForm({ service }: { service?: Service }) {
     const response = await fetch(endpoint, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: service?.id || finalSlug, title, slug: finalSlug, shortDescription, idealClient, problem, deliverables, scope, exclusions, priceFrom, priceNote, ctaText, isActive, sortOrder })
+      body: JSON.stringify({ id: service?.id || finalSlug, title, slug: finalSlug, shortDescription, idealClient, problem, deliverables, scope, exclusions, priceFrom, priceNote, ctaText, whatsappMessage, isActive, sortOrder })
     });
     setSaving(false);
 
@@ -68,6 +69,7 @@ export function ServiceForm({ service }: { service?: Service }) {
         <Field label="Precio desde" value={priceFrom} onChange={setPriceFrom} />
         <Field label="Nota de precio" value={priceNote} onChange={setPriceNote} />
         <Field label="CTA" value={ctaText} onChange={setCtaText} />
+        <Textarea label="Mensaje WhatsApp personalizado" value={whatsappMessage} onChange={setWhatsappMessage} helper="Opcional. Si queda vacío, se usará: Hola, quiero [CTA]." />
         <Field label="Orden" type="number" value={String(sortOrder)} onChange={(value) => setSortOrder(Number(value))} />
       </div>
       <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white">
@@ -85,6 +87,6 @@ function Field({ label, value, onChange, required, type = "text" }: { label: str
   return <label className="block"><span className="text-sm font-bold text-white">{label}</span><input type={type} value={value} onChange={(event) => onChange(event.target.value)} required={required} className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-cyan-300" /></label>;
 }
 
-function Textarea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return <label className="block"><span className="text-sm font-bold text-white">{label}</span><textarea value={value} onChange={(event) => onChange(event.target.value)} rows={5} className="mt-2 w-full resize-y rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-white outline-none focus:border-cyan-300" /></label>;
+function Textarea({ label, value, onChange, helper }: { label: string; value: string; onChange: (value: string) => void; helper?: string }) {
+  return <label className="block"><span className="text-sm font-bold text-white">{label}</span><textarea value={value} onChange={(event) => onChange(event.target.value)} rows={5} className="mt-2 w-full resize-y rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm leading-6 text-white outline-none focus:border-cyan-300" />{helper ? <span className="mt-1 block text-xs text-slate-500">{helper}</span> : null}</label>;
 }

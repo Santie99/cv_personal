@@ -29,11 +29,14 @@ export function ServicesAdminClient() {
                   <div className="flex flex-wrap gap-2">
                     {service.isActive ? <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-200">Activo</span> : <span className="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold text-amber-200">Oculto</span>}
                     <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-slate-200">Orden {service.sortOrder}</span>
+                    {service.whatsappMessage ? <span className="rounded-full bg-cyan-300/10 px-3 py-1 text-xs font-bold text-cyan-200">Mensaje WA custom</span> : null}
                   </div>
                   <h2 className="mt-3 text-xl font-black text-white">{service.title}</h2>
                   <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">{service.shortDescription}</p>
+                  <p className="mt-2 text-xs text-slate-500">CTA: {service.ctaText}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
+                  <Link href={`/servicios#${service.slug}`} className="rounded-xl border border-white/10 px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/10">Ver</Link>
                   <Link href={`/admin/servicios/${service.id}/editar`} className="rounded-xl bg-cyan-300 px-3 py-2 text-xs font-black text-slate-950 hover:bg-cyan-200">Editar</Link>
                   <ServiceDeleteButton id={service.id} title={service.title} />
                 </div>

@@ -23,6 +23,22 @@ const mediaSteps = [
   "Revisar en la web pública que la imagen cargue correctamente."
 ];
 
+const homeSteps = [
+  "Entrar a /admin/home.",
+  "Editar hero, capacidades, sobre mí o CTA final.",
+  "Activar o desactivar secciones según necesidad.",
+  "Guardar y revisar la home pública.",
+  "Si el cambio no aparece de inmediato, usar Ctrl+F5 o esperar revalidación."
+];
+
+const configSteps = [
+  "Entrar a /admin/configuracion.",
+  "Editar SEO global, canonical URL, OG image o keywords.",
+  "Activar o desactivar /notas.",
+  "Guardar cambios.",
+  "Revisar /sitemap.xml, /robots.txt y la página pública afectada."
+];
+
 const whatsappSteps = [
   "Entrar a /admin/perfil.",
   "Completar el campo WhatsApp con formato internacional, por ejemplo 573118773089.",
@@ -58,6 +74,8 @@ export default function AdminGuidePage() {
         <GuideCard title="Checklist de deploy" items={deploySteps} />
         <GuideCard title="Gestión de imágenes" items={mediaSteps} />
         <GuideCard title="Embudo a WhatsApp" items={whatsappSteps} />
+        <GuideCard title="Editar home" items={homeSteps} />
+        <GuideCard title="Configuración global" items={configSteps} />
       </div>
 
       <section className="glass-card mt-6 rounded-3xl p-6">
@@ -67,6 +85,8 @@ export default function AdminGuidePage() {
           <Rule title="Destacado" text="Solo controla si puede aparecer en la home. No basta con destacarlo: también debe estar publicado." />
           <Rule title="Orden destacado" text="La home muestra máximo 3 destacados. Usa 1, 2 y 3 para controlar el orden principal." />
           <Rule title="WhatsApp" text="Los CTAs usan el WhatsApp del perfil. Si está vacío, redirigen a /contacto para no romper el flujo." />
+          <Rule title="Home" text="Los textos principales y la visibilidad de secciones se editan desde /admin/home." />
+          <Rule title="Configuración" text="SEO global, notas y estado comercial se editan desde /admin/configuracion." />
         </div>
       </section>
 

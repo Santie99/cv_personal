@@ -124,6 +124,7 @@ create table if not exists public.services (
   price_from text not null,
   price_note text not null,
   cta_text text not null,
+  whatsapp_message text,
   is_active boolean not null default true,
   sort_order int not null default 100,
   created_at timestamptz not null default now(),

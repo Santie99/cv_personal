@@ -58,6 +58,14 @@ export function ProjectForm({ project }: { project?: Project }) {
 
   const previewSlug = useMemo(() => slug || slugify(title), [slug, title]);
 
+  const publicUrl = previewSlug ? `/proyectos/${previewSlug}` : "/proyectos";
+  const warnings = [
+    isFeatured && !isPublished ? "Este proyecto está destacado, pero no aparecerá en la home porque no está publicado." : "",
+    isFeatured && featuredOrder > 3 ? "Está destacado, pero el orden es mayor a 3. La home solo muestra los 3 primeros destacados." : "",
+    !seoDescription && shortDescription ? "SEO description vacío: se usará la descripción corta al guardar." : "",
+    !coverImageUrl ? "Falta imagen principal." : ""
+  ].filter(Boolean);
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
@@ -115,6 +123,19 @@ export function ProjectForm({ project }: { project?: Project }) {
   return (
     <form onSubmit={submit} className="space-y-6">
       {error ? <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-100">{error}</div> : null}
+
+      <section className="glass-card rounded-3xl p-5">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Preview y control</p>
+            <p className="mt-2 text-sm text-slate-300">URL pública estimada: <span className="font-mono text-cyan-100">{publicUrl}</span></p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <a href={publicUrl} target="_blank" rel="noreferrer" className="rounded-xl border border-white/10 px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/10">Ver preview</a>
+          </div>
+        </div>
+        {warnings.length ? <div className="mt-4 grid gap-2">{warnings.map((warning) => <p key={warning} className="rounded-2xl border border-amber-300/30 bg-amber-400/10 p-3 text-sm text-amber-100">{warning}</p>)}</div> : null}
+      </section>
 
       <section className="glass-card rounded-3xl p-5">
         <h2 className="text-lg font-black text-white">Información base</h2>

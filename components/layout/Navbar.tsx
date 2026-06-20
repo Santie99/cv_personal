@@ -2,19 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const baseNavItems = [
   { href: "/proyectos", label: "Proyectos" },
   { href: "/servicios", label: "Servicios" },
   { href: "/sobre-mi", label: "Sobre mí" },
   { href: "/contacto", label: "Contacto" }
 ];
 
-export function Navbar({ profileName = "Santie Bernal" }: { profileName?: string }) {
+export function Navbar({ profileName = "Santie Bernal", showNotes = true }: { profileName?: string; showNotes?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const navItems = useMemo(() => showNotes ? [...baseNavItems.slice(0, 2), { href: "/notas", label: "Notas" }, ...baseNavItems.slice(2)] : baseNavItems, [showNotes]);
 
   const closeMenu = () => setIsOpen(false);
 
@@ -36,9 +37,7 @@ export function Navbar({ profileName = "Santie Bernal" }: { profileName?: string
                 href={item.href}
                 className={cn(
                   "focus-ring rounded-full px-4 py-2 text-sm font-semibold transition",
-                  isActive
-                    ? "bg-cyan-300/12 text-cyan-100"
-                    : "text-slate-300 hover:bg-white/8 hover:text-white"
+                  isActive ? "bg-cyan-300/12 text-cyan-100" : "text-slate-300 hover:bg-white/8 hover:text-white"
                 )}
               >
                 {item.label}
@@ -48,10 +47,7 @@ export function Navbar({ profileName = "Santie Bernal" }: { profileName?: string
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/contacto"
-            className="focus-ring rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-300/20"
-          >
+          <Link href="/contacto" className="focus-ring rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-300/20">
             Hablemos
           </Link>
         </div>
@@ -73,10 +69,7 @@ export function Navbar({ profileName = "Santie Bernal" }: { profileName?: string
         </button>
 
         {isOpen ? (
-          <div
-            id="mobile-navigation"
-            className="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-50 rounded-[1.5rem] border border-white/10 bg-slate-950/96 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl md:hidden"
-          >
+          <div id="mobile-navigation" className="absolute left-0 right-0 top-[calc(100%+0.75rem)] z-50 rounded-[1.5rem] border border-white/10 bg-slate-950/96 p-3 shadow-2xl shadow-black/40 backdrop-blur-xl md:hidden">
             <div className="grid gap-2">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
@@ -95,11 +88,7 @@ export function Navbar({ profileName = "Santie Bernal" }: { profileName?: string
                   </Link>
                 );
               })}
-              <Link
-                href="/contacto"
-                onClick={closeMenu}
-                className="focus-ring mt-2 rounded-2xl bg-cyan-300 px-4 py-3 text-center text-base font-black text-slate-950 transition hover:bg-cyan-200"
-              >
+              <Link href="/contacto" onClick={closeMenu} className="focus-ring mt-2 rounded-2xl bg-cyan-300 px-4 py-3 text-center text-base font-black text-slate-950 transition hover:bg-cyan-200">
                 Hablemos de una idea
               </Link>
             </div>

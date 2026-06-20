@@ -47,6 +47,8 @@ export function AdminDashboardClient() {
           <div className="mt-8 grid gap-4 md:grid-cols-4">
             <QuickAction href="/admin/proyectos/nuevo" title="Crear proyecto" description="Agrega un nuevo caso de estudio o experimento." />
             <QuickAction href="/admin/proyectos" title="Cambiar destacados" description="Activa, desactiva y reordena proyectos principales." />
+            <QuickAction href="/admin/home" title="Editar home" description="Ajusta hero, capacidades y CTA final." />
+            <QuickAction href="/admin/media" title="Gestionar imágenes" description="Sube fotos, portadas y OG images." />
             <QuickAction href="/admin/mensajes" title="Revisar mensajes" description="Lee contactos recibidos desde la web pública." />
             <QuickAction href="/admin/guia" title="Guía admin" description="Consulta el flujo para publicar, destacar y mantener la web." />
           </div>

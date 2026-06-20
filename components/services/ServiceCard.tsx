@@ -3,7 +3,7 @@ import { getContactHref, serviceWhatsAppMessage } from "@/lib/whatsapp";
 import type { Profile, Service } from "@/types";
 
 export function ServiceCard({ service, profile }: { service: Service; profile: Pick<Profile, "whatsappUrl"> }) {
-  const href = getContactHref(profile, serviceWhatsAppMessage(service.ctaText));
+  const href = getContactHref(profile, service.whatsappMessage || serviceWhatsAppMessage(service.ctaText));
   const isExternal = href.startsWith("http");
 
   return (

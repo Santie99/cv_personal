@@ -1,8 +1,8 @@
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import type { Profile } from "@/types";
+import type { HomeSection, Profile } from "@/types";
 
-export function AboutPreview({ profile }: { profile: Profile }) {
+export function AboutPreview({ profile, content }: { profile: Profile; content: HomeSection }) {
   const skillGroups = profile.skills.reduce<Record<string, string[]>>((acc, skill) => {
     acc[skill.category] = acc[skill.category] || [];
     acc[skill.category].push(skill.name);
@@ -13,9 +13,9 @@ export function AboutPreview({ profile }: { profile: Profile }) {
     <section className="container-page py-20">
       <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <SectionHeader
-          eyebrow="Sobre mí"
-          title="Construyo mientras aprendo, documento y convierto ideas en producto."
-          description={profile.longBio}
+          eyebrow={content.subtitle || "Sobre mí"}
+          title={content.title}
+          description={content.content || profile.longBio}
         />
         <div className="glass-card rounded-[2rem] p-6">
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Stack y enfoque</p>
@@ -31,7 +31,7 @@ export function AboutPreview({ profile }: { profile: Profile }) {
               </div>
             ))}
           </div>
-          <ButtonLink href="/sobre-mi" variant="secondary" className="mt-6">Leer más</ButtonLink>
+          <ButtonLink href={content.ctaUrl || "/sobre-mi"} variant="secondary" className="mt-6">{content.ctaLabel || "Leer más"}</ButtonLink>
         </div>
       </div>
     </section>
